@@ -14,9 +14,25 @@ export function SearchBar() {
     isSearchTypeMenuOpen,
     searchQuery,
     selections,
+    searchType,
     setIsMenuOpen,
     setSearchQuery,
   } = useSearchBarStore();
+
+  const getPlaceholder = () => {
+    if (selections.length > 0) return '';
+
+    switch (searchType) {
+      case 'Cocktail name':
+        return 'Search cocktail names...';
+      case 'Glass types':
+        return 'Search glass types...';
+      case 'Ingredients':
+        return 'Search ingredients...';
+      default:
+        return 'Search cocktails, glasses, or ingredients...';
+    }
+  };
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -30,7 +46,7 @@ export function SearchBar() {
   }, []);
 
   return (
-    <div className='container max-w-4xl mx-auto py-8 relative' ref={searchBarRef}>
+    <div className='container max-w-4xl mx-auto py-8 relative z-50' ref={searchBarRef}>
       <div className='relative'>
         <div className='bg-white border flex flex-wrap gap-2 h-12 items-center pr-4 rounded-lg shadow-md text-black w-full'>
           <SearchBarFilter />
@@ -41,9 +57,7 @@ export function SearchBar() {
             })}
             onChange={e => setSearchQuery(e.target.value)}
             onClick={() => setIsMenuOpen(true)}
-            placeholder={
-              selections.length === 0 ? 'Search cocktails, glasses, or ingredients...' : ''
-            }
+            placeholder={getPlaceholder()}
             value={searchQuery}
           />
         </div>

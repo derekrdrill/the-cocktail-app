@@ -16,7 +16,8 @@ export function SearchBarMenuSection({
   type,
   shouldShow,
 }: SearchBarMenuSectionProps) {
-  const { setIsMenuOpen, setSearchQuery, setSelections, selections } = useSearchBarStore();
+  const { setIsMenuOpen, setSearchQuery, setSelections, selections, searchType } =
+    useSearchBarStore();
 
   if (!shouldShow || items.length === 0) return null;
 
@@ -56,7 +57,9 @@ export function SearchBarMenuSection({
 
   return (
     <div className='border-b border-gray-100 p-2'>
-      <div className='font-medium px-2 py-1.5 text-gray-500 text-sm'>{title}</div>
+      {searchType === 'All' && (
+        <div className='font-medium px-2 py-1.5 text-gray-500 text-sm'>{title}</div>
+      )}
       {items.map(item => (
         <button
           key={`${type}-${item}`}

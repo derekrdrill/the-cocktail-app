@@ -1,11 +1,12 @@
 'use client';
 
-import { Selection, FilteredResults, FilterData } from '../types';
+import { Selection, FilteredResults, FilterData, SearchType } from '../types';
 
 export function filterResults(
   cocktailsData: FilterData,
   searchQuery: string,
   selections: Selection[],
+  searchType: SearchType = 'All',
 ): FilteredResults {
   if (!cocktailsData) return { cocktails: [], glasses: [], ingredients: [] };
 
@@ -21,6 +22,15 @@ export function filterResults(
       ingredient.toLowerCase().includes(query),
     ),
   };
+
+  // If searchType is not 'All', return all matches for the selected type
+  if (searchType !== 'All') {
+    return {
+      cocktails: searchType === 'Cocktail name' ? allMatches.cocktails : [],
+      glasses: searchType === 'Glass types' ? allMatches.glasses : [],
+      ingredients: searchType === 'Ingredients' ? allMatches.ingredients : [],
+    };
+  }
 
   // If there's no search query, show default number per section
   if (!query) {

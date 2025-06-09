@@ -9,17 +9,22 @@ import { SearchType } from '../types';
 
 export function SearchBarFilter() {
   const searchBarFilterRef = useRef<HTMLDivElement>(null);
-  const { isSearchTypeMenuOpen, searchType, setIsSearchTypeMenuOpen, setSearchType } =
-    useSearchBarStore();
+  const {
+    isSearchTypeMenuOpen,
+    searchType,
+    setIsSearchTypeMenuOpen,
+    setSearchType,
+    setSearchQuery,
+    setSelections,
+  } = useSearchBarStore();
 
-  const handleOptionClick = (searchType: SearchType) => {
-    setSearchType(searchType);
-    handleSelect(searchType);
+  const handleOptionClick = (newSearchType: SearchType) => {
+    if (newSearchType !== searchType) {
+      setSearchQuery('');
+      setSelections([]);
+    }
+    setSearchType(newSearchType);
     setIsSearchTypeMenuOpen(false);
-  };
-
-  const handleSelect = (searchType: SearchType) => {
-    setSearchType(searchType);
   };
 
   useEffect(() => {
