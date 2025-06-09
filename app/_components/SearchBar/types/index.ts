@@ -1,3 +1,5 @@
+export type SearchType = 'All' | 'Cocktail name' | 'Glass types' | 'Ingredients';
+
 export type Selection = {
   type: 'cocktail' | 'glass' | 'ingredient';
   value: string;

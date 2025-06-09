@@ -1,35 +1,27 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
-import { Command } from '../ui/command';
-import { useCocktailData } from '@/app/_hooks/useCocktailData';
-import { useRouter } from 'next/navigation';
-import { SearchBarInput } from './components/SearchBarInput';
+import classNames from 'classnames';
+import { useRef, useEffect } from 'react';
+import { useSearchBarStore } from './store';
 import { SearchBarMenu } from './components/SearchBarMenu';
-import { handleSelection, handleRemoveSelection } from './helpers';
-import { Selection } from './types';
+import { SearchBarChips } from './components/SearchBarChips';
+import { SearchBarFilter } from './components/SearchBarFilter';
 
-export function SearchBarV2() {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selections, setSelections] = useState<Selection[]>([]);
-  const [isFocused, setIsFocused] = useState(false);
-  const commandRef = useRef<HTMLDivElement>(null);
-  const { data: cocktailData, isLoading } = useCocktailData();
-  const router = useRouter();
-
-  // Transform the data into the format expected by SearchBarMenu
-  const data = cocktailData
-    ? {
-        cocktailNames: cocktailData.cocktailNames,
-        glassTypes: cocktailData.glassTypes,
-        ingredients: cocktailData.ingredients,
-      }
-    : null;
+export function SearchBar() {
+  const searchBarRef = useRef<HTMLDivElement>(null);
+  const {
+    isMenuOpen,
+    isSearchTypeMenuOpen,
+    searchQuery,
+    selections,
+    setIsMenuOpen,
+    setSearchQuery,
+  } = useSearchBarStore();
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (commandRef.current && !commandRef.current.contains(event.target as Node)) {
-        setIsFocused(false);
+      if (searchBarRef.current && !searchBarRef.current.contains(event.target as Node)) {
+        setIsMenuOpen(false);
       }
     };
 
@@ -37,34 +29,25 @@ export function SearchBarV2() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const onSelection = (type: 'cocktail' | 'glass' | 'ingredient', value: string) => {
-    handleSelection(type, value, selections, setSelections, setSearchQuery, router);
-  };
-
-  const onRemoveSelection = (selectionToRemove: Selection) => {
-    handleRemoveSelection(selectionToRemove, selections, setSelections, setSearchQuery);
-  };
-
   return (
-    <div className='w-full max-w-4xl mx-auto mb-8'>
-      <div className='relative' ref={commandRef}>
-        <Command className='rounded-lg border shadow-md'>
-          <SearchBarInput
-            searchQuery={searchQuery}
-            onSearchChange={setSearchQuery}
-            onFocus={() => setIsFocused(true)}
-            onBlur={() => setIsFocused(false)}
+    <div className='container max-w-4xl mx-auto py-8 relative' ref={searchBarRef}>
+      <div className='relative'>
+        <div className='bg-white border flex flex-wrap gap-2 h-12 items-center pr-4 rounded-lg shadow-md text-black w-full'>
+          <SearchBarFilter />
+          <SearchBarChips />
+          <input
+            className={classNames('bg-transparent flex-1 h-full min-w-[200px] outline-none', {
+              'rounded-b-none': isMenuOpen,
+            })}
+            onChange={e => setSearchQuery(e.target.value)}
+            onClick={() => setIsMenuOpen(true)}
+            placeholder={
+              selections.length === 0 ? 'Search cocktails, glasses, or ingredients...' : ''
+            }
+            value={searchQuery}
           />
-          {isFocused && (
-            <SearchBarMenu
-              searchQuery={searchQuery}
-              selections={selections}
-              data={data}
-              isLoading={isLoading}
-              onSelection={onSelection}
-            />
-          )}
-        </Command>
+        </div>
+        {isMenuOpen && !isSearchTypeMenuOpen && <SearchBarMenu />}
       </div>
     </div>
   );

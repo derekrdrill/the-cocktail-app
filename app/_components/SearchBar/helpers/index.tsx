@@ -3,33 +3,27 @@
 import { Selection, FilteredResults, FilterData } from '../types';
 
 export function filterResults(
-  data: FilterData,
+  cocktailsData: FilterData,
   searchQuery: string,
   selections: Selection[],
 ): FilteredResults {
-  if (!data) return { cocktails: [], glasses: [], ingredients: [] };
+  if (!cocktailsData) return { cocktails: [], glasses: [], ingredients: [] };
 
   const query = searchQuery.toLowerCase();
   const MAX_TOTAL_RESULTS = 12;
   const DEFAULT_PER_SECTION = 4;
 
-  // First, get all matches for each category
+  // First, get all matches for each category based only on search query
   const allMatches = {
-    cocktails: data.cocktailNames.filter(name => name.toLowerCase().includes(query)),
-    glasses: data.glassTypes.filter(
-      glass =>
-        glass.toLowerCase().includes(query) &&
-        !selections.some(s => s.type === 'glass' && s.value === glass),
-    ),
-    ingredients: data.ingredients.filter(
-      ingredient =>
-        ingredient.toLowerCase().includes(query) &&
-        !selections.some(s => s.type === 'ingredient' && s.value === ingredient),
+    cocktails: cocktailsData.cocktailNames.filter(name => name.toLowerCase().includes(query)),
+    glasses: cocktailsData.glassTypes.filter(glass => glass.toLowerCase().includes(query)),
+    ingredients: cocktailsData.ingredients.filter(ingredient =>
+      ingredient.toLowerCase().includes(query),
     ),
   };
 
-  // If there's no search query and no selections, show default number per section
-  if (!query && selections.length === 0) {
+  // If there's no search query, show default number per section
+  if (!query) {
     return {
       cocktails: allMatches.cocktails.slice(0, DEFAULT_PER_SECTION),
       glasses: allMatches.glasses.slice(0, DEFAULT_PER_SECTION),
@@ -63,59 +57,4 @@ export function filterResults(
       Math.max(1, Math.round(MAX_TOTAL_RESULTS * ingredientRatio)),
     ),
   };
-}
-
-export function shouldShowSection(
-  type: 'cocktail' | 'glass' | 'ingredient',
-  selections: Selection[],
-): boolean {
-  switch (type) {
-    case 'cocktail':
-      return !selections.some(s => s.type === 'glass' || s.type === 'ingredient');
-    case 'glass':
-      return (
-        !selections.some(s => s.type === 'glass') && !selections.some(s => s.type === 'ingredient')
-      );
-    case 'ingredient':
-      return true;
-  }
-}
-
-export function handleSelection(
-  type: 'cocktail' | 'glass' | 'ingredient',
-  value: string,
-  selections: Selection[],
-  setSelections: (selections: Selection[]) => void,
-  setSearchQuery: (query: string) => void,
-  router: { push: (path: string) => void },
-) {
-  if (type === 'cocktail') {
-    router.push(`/cocktail/${encodeURIComponent(value)}`);
-    return;
-  }
-
-  // For glass and ingredient selections
-  const newSelection: Selection = { type, value };
-  setSelections([...selections, newSelection]);
-
-  // Update the search query to show all selections
-  const updatedSelections = [...selections, newSelection];
-  const displayQuery = updatedSelections.map(s => s.value).join(', ');
-  setSearchQuery(displayQuery);
-}
-
-export function handleRemoveSelection(
-  selectionToRemove: Selection,
-  selections: Selection[],
-  setSelections: (selections: Selection[]) => void,
-  setSearchQuery: (query: string) => void,
-) {
-  const newSelections = selections.filter(
-    s => !(s.type === selectionToRemove.type && s.value === selectionToRemove.value),
-  );
-  setSelections(newSelections);
-
-  // Update the search query
-  const displayQuery = newSelections.map(s => s.value).join(', ');
-  setSearchQuery(displayQuery);
 }
