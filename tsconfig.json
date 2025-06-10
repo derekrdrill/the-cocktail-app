@@ -21,17 +21,6 @@
     "baseUrl": "./",
     "paths": {
       "@/*": ["*"],
-      "@/api/*": ["app/_api/*"],
-      "@/client/*": ["app/_client/*"],
-      "@/components/*": ["app/_components/*"],
-      "@/game": ["app/game"],
-      "@/helpers": ["app/_helpers"],
-      "@/hooks": ["app/_hooks"],
-      "@/store": ["app/_store"],
-      "@/styles/*": ["app/_styles/*"],
-      "@/types": ["app/_types"],
-      "@/public/*": ["public/*"],
-      "@/queryClient": ["client/queryClient"],
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],

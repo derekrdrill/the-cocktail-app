@@ -1,26 +1,7 @@
 import axios from 'axios';
 import { useQuery } from '@tanstack/react-query';
-import { useSearchBarStore } from '@/app/_components/SearchBar/store';
-
-interface Cocktail {
-  idDrink: string;
-  strDrink: string;
-  strDrinkThumb: string;
-  strInstructions: string;
-  strGlass: string;
-  [key: string]: string | null; // This allows for dynamic ingredient properties
-}
-
-interface CocktailData {
-  cocktailData: Cocktail[];
-  cocktailNames: string[];
-  glassTypes: string[];
-  ingredients: string[];
-}
-
-interface CocktailResponse extends CocktailData {
-  randomCocktails: Cocktail[];
-}
+import { useSearchBarStore } from '@/store';
+import { Cocktail, CocktailDataWithRandoms } from '@/types/types';
 
 const cocktailOptions = {
   method: 'GET',
@@ -35,7 +16,7 @@ function getRandomCocktails(cocktails: Cocktail[], count: number): Cocktail[] {
 export function useCocktailData() {
   const { setCocktailsData } = useSearchBarStore();
 
-  return useQuery<CocktailResponse>({
+  return useQuery<CocktailDataWithRandoms>({
     queryKey: ['cocktailData'],
     queryFn: async () => {
       const response = await axios.request(cocktailOptions);

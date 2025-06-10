@@ -1,8 +1,8 @@
 'use client';
 
 import { X } from 'lucide-react';
-import { useSearchBarStore } from '../store';
-import { Selection } from '../types';
+import { useSearchBarStore } from '@/store';
+import { Selection } from '@/types/types';
 
 type SearchBarChipProps = {
   label: string;

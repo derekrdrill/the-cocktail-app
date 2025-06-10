@@ -1,7 +1,7 @@
 'use client';
 
-import { useSearchBarStore } from '../store';
-import type { Selection } from '../types';
+import { useSearchBarStore } from '@/store';
+import { Selection } from '@/types/types';
 
 type SearchBarMenuSectionProps = {
   title: string;

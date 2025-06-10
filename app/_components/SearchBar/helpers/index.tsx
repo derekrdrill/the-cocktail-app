@@ -1,6 +1,6 @@
 'use client';
 
-import { Selection, FilteredResults, FilterData, SearchType } from '../types';
+import { Selection, FilteredResults, FilterData, SearchType } from '@/types/types';
 
 export function filterResults(
   cocktailsData: FilterData,

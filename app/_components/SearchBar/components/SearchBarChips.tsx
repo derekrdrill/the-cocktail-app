@@ -1,6 +1,6 @@
 'use client';
 import { SearchBarChip } from './SearchBarChip';
-import { useSearchBarStore } from '../store';
+import { useSearchBarStore } from '@/store';
 
 export function SearchBarChips() {
   const { selections } = useSearchBarStore();

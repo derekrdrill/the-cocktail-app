@@ -1,8 +1,8 @@
 'use client';
 
 import { useMemo } from 'react';
+import { useSearchBarStore } from '@/store';
 import { filterResults } from '../helpers';
-import { useSearchBarStore } from '../store';
 import { SearchBarMenuSection } from './SearchBarMenuSection';
 
 export function SearchBarMenu() {

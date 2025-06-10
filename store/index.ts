@@ -1,9 +1,7 @@
 import { create } from 'zustand';
-import { Selection } from '../types';
+import { Selection, SearchType } from '@/types/types';
 
-type SearchType = 'All' | 'Cocktail name' | 'Glass types' | 'Ingredients';
-
-interface SearchBarState {
+type SearchBarState = {
   cocktailsData: {
     cocktailNames: string[];
     glassTypes: string[];
@@ -20,7 +18,7 @@ interface SearchBarState {
   setSearchType: (searchType: SearchType) => void;
   setSearchQuery: (query: string) => void;
   setSelections: (selections: Selection[]) => void;
-}
+};
 
 export const useSearchBarStore = create<SearchBarState>(set => ({
   cocktailsData: null,

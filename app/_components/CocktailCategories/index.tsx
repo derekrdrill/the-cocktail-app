@@ -1,17 +1,11 @@
 'use client';
 
 import Link from 'next/link';
+import { CocktailCategory } from '@/types/types';
 
 // Simplified Category type - all will now use gradient
-interface Category {
-  name: string;
-  description: string;
-  slug: string;
-  gradient: string;
-  glow: string;
-}
 
-const categories: Category[] = [
+const categories: CocktailCategory[] = [
   {
     name: 'Vodka',
     description: 'Clear, neutral spirits perfect for mixing',

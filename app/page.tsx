@@ -3,6 +3,7 @@ import { CocktailGrid } from './_components/CocktailGrid';
 import { CocktailCategories } from './_components/CocktailCategories';
 import { AnimatedMartiniPattern } from './_components/AnimatedMartiniPattern';
 import { AnimatedMartiniPatternMobile } from './_components/AnimatedMartiniPatternMobile';
+import { NeonTitle } from './_components/NeonTitle';
 
 export default function Home() {
   return (
@@ -15,9 +16,7 @@ export default function Home() {
           <div className='sm:hidden'>
             <AnimatedMartiniPatternMobile />
           </div>
-          <h1 className='text-5xl font-bold mb-2 neon-font neon-glow text-center relative'>
-            The Bartender App
-          </h1>
+          <NeonTitle className='text-center' />
           <p className='mb-8 text-center text-gray-300 relative'>What can I get for you?</p>
         </div>
         <SearchBar />

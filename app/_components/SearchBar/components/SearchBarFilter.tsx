@@ -4,8 +4,8 @@ import { useEffect, useRef } from 'react';
 import classNames from 'classnames';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 
-import { useSearchBarStore } from '../store';
-import { SearchType } from '../types';
+import { useSearchBarStore } from '@/store';
+import { SearchType } from '@/types/types';
 
 export function SearchBarFilter() {
   const searchBarFilterRef = useRef<HTMLDivElement>(null);

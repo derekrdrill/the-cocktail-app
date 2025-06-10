@@ -2,7 +2,7 @@
 
 import classNames from 'classnames';
 import { useRef, useEffect } from 'react';
-import { useSearchBarStore } from './store';
+import { useSearchBarStore } from '@/store';
 import { SearchBarMenu } from './components/SearchBarMenu';
 import { SearchBarChips } from './components/SearchBarChips';
 import { SearchBarFilter } from './components/SearchBarFilter';

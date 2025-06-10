@@ -1,18 +1,9 @@
 'use client';
 
-import { useCocktailData } from '../_hooks/useCocktailData';
+import { useCocktailData } from '@/hooks/useCocktailData';
 import { CocktailCard } from './CocktailCard';
 import { LoadingState } from './LoadingState';
 import { ErrorState } from './ErrorState';
-
-interface Cocktail {
-  idDrink: string;
-  strDrink: string;
-  strDrinkThumb: string;
-  strInstructions: string;
-  strGlass: string;
-  [key: string]: string | null;
-}
 
 export function CocktailGrid() {
   const { data, isLoading, error } = useCocktailData();
@@ -28,7 +19,7 @@ export function CocktailGrid() {
   return (
     <div className='mb-8'>
       <div className='mb-8'>
-        <h2 className='text-2xl font-semibold text-white'>Featured Cocktails</h2>
+        <h2 className='text-2xl font-semibold text-white'>Featured Drinks</h2>
         <p className='mt-2 text-gray-300'>
           Discover our handpicked selection of classic and contemporary cocktails
         </p>
