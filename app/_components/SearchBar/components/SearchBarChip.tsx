@@ -27,6 +27,7 @@ export const handleRemoveSelection = ({
 
 export function SearchBarChip({ label, selection }: SearchBarChipProps) {
   const { selections, setSelections } = useSearchBarStore();
+
   return (
     <div className='bg-gray-100 border border-gray-200 flex h-6 items-center px-2 rounded-full text-sm'>
       <span className='text-gray-700'>{label}</span>

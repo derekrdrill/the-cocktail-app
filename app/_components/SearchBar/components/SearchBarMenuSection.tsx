@@ -28,8 +28,10 @@ export function SearchBarMenuSection({
       return;
     }
 
-    // For glass and ingredient selections
-    const newSelection: Selection = { type, value };
+    // For glass and ingredient selections (type is now guaranteed to be 'glass' or 'ingredient')
+    setSearchQuery('');
+
+    const newSelection: Selection = { type: type as 'glass' | 'ingredient', value };
 
     // Validate selection limits
     if (type === 'glass') {
@@ -51,7 +53,6 @@ export function SearchBarMenuSection({
     // Only add if not already selected
     if (!selections.some(s => s.type === type && s.value === value)) {
       setSelections([...selections, newSelection]);
-      setSearchQuery(''); // Clear the search query
     }
   };
 

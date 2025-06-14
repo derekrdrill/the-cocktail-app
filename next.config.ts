@@ -6,7 +6,7 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'nba-everything-api-development-275a1bdbe9c8.herokuapp.com',
+        hostname: 'www.thecocktaildb.com',
         port: '',
         pathname: '/**',
         search: '',

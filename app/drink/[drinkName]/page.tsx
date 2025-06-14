@@ -11,7 +11,6 @@ import { VideoPlayer } from '@/app/_components/VideoPlayer';
 import { DrinkHero } from './components/DrinkHero';
 import { DrinkIngredients } from './components/DrinkIngredients';
 import { DrinkInstructions } from './components/DrinkInstructions';
-import { DrinkTags } from './components/DrinkTags';
 
 export default function DrinkPage() {
   const params = useParams();
@@ -30,6 +29,8 @@ export default function DrinkPage() {
     isLoading: isVideoLoading,
     error: videoError,
   } = useCocktailVideoData(drinkDetails?.idDrink ?? '');
+
+  console.log(videoData);
 
   if (isLoading) {
     return (
@@ -60,9 +61,6 @@ export default function DrinkPage() {
     }))
     .filter((ing): ing is { name: string; measure: string | null } => ing.name !== null);
 
-  // Get tags if they exist
-  const tags = drinkDetails.strTags ? drinkDetails.strTags.split(',') : [];
-
   return (
     <main className='min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 text-white'>
       <Header />
@@ -71,32 +69,12 @@ export default function DrinkPage() {
         imageUrl={drinkDetails.strDrinkThumb}
         glassType={drinkDetails.strGlass}
         alcoholic={drinkDetails.strAlcoholic || 'Alcoholic'}
+        difficulty={drinkDetails.difficulty}
       />
-
       <div className='container mx-auto max-w-[2000px] px-8 py-8'>
-        <div className='grid grid-cols-1 lg:grid-cols-12 gap-6'>
-          {/* Left Column - Ingredients & Instructions */}
-          <div className='lg:col-span-8 space-y-6'>
-            <DrinkIngredients ingredients={ingredients} />
-            <DrinkInstructions instructions={drinkDetails.strInstructions} />
-            <DrinkTags tags={tags} />
-          </div>
-
-          {/* Right Column - Video */}
-          <div className='lg:col-span-4'>
-            <div className='sticky top-8'>
-              <div className='bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10'>
-                <h2 className='text-2xl font-semibold mb-4 flex items-center gap-2'>
-                  <span className='text-yellow-400'>How to Make</span>
-                </h2>
-                <VideoPlayer
-                  videoData={videoData ?? null}
-                  isLoading={isVideoLoading}
-                  error={videoError?.toString()}
-                />
-              </div>
-            </div>
-          </div>
+        <div className='space-y-6'>
+          <DrinkIngredients ingredients={ingredients} />
+          <DrinkInstructions instructions={drinkDetails.strInstructions} />
         </div>
       </div>
     </main>

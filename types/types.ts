@@ -3,7 +3,19 @@ type SearchType = 'All' | 'Cocktail name' | 'Glass types' | 'Ingredients';
 type Selection = {
   type: 'cocktail' | 'glass' | 'ingredient';
   value: string;
+  tooltip?: {
+    title: string;
+    content: string;
+  };
 };
+
+type SortOption =
+  | 'name-asc'
+  | 'name-desc'
+  | 'ingredients-asc'
+  | 'ingredients-desc'
+  | 'difficulty-asc'
+  | 'difficulty-desc';
 
 type FilteredResults = {
   cocktails: string[];
@@ -55,4 +67,5 @@ export type {
   FilteredResults,
   SearchType,
   Selection,
+  SortOption,
 };
