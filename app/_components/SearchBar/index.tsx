@@ -13,12 +13,12 @@ export function SearchBar() {
   const router = useRouter();
   const searchBarRef = useRef<HTMLDivElement>(null);
   const {
-    isMenuOpen,
+    isSearchMenuOpen,
     isSearchTypeMenuOpen,
     searchQuery,
     selections,
     searchType,
-    setIsMenuOpen,
+    setIsSearchMenuOpen,
     setSearchQuery,
     setActiveSearch,
   } = useSearchBarStore();
@@ -59,13 +59,13 @@ export function SearchBar() {
     router.push('/drinks');
 
     // Close the menu after search
-    setIsMenuOpen(false);
+    setIsSearchMenuOpen(false);
   };
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (searchBarRef.current && !searchBarRef.current.contains(event.target as Node)) {
-        setIsMenuOpen(false);
+        setIsSearchMenuOpen(false);
       }
     };
 
@@ -93,10 +93,10 @@ export function SearchBar() {
           <SearchBarChips />
           <input
             className={classNames('bg-transparent flex-1 h-full min-w-[200px] outline-none', {
-              'rounded-b-none': isMenuOpen,
+              'rounded-b-none': isSearchMenuOpen,
             })}
             onChange={e => setSearchQuery(e.target.value)}
-            onClick={() => setIsMenuOpen(true)}
+            onClick={() => setIsSearchMenuOpen(true)}
             placeholder={getPlaceholder()}
             value={searchQuery}
           />
@@ -108,7 +108,7 @@ export function SearchBar() {
             Search
           </button>
         </div>
-        {isMenuOpen && !isSearchTypeMenuOpen && <SearchBarMenu />}
+        {isSearchMenuOpen && !isSearchTypeMenuOpen && <SearchBarMenu />}
       </div>
     </div>
   );

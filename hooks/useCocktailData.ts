@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useSearchBarStore } from '@/store';
 import { Cocktail, CocktailDataWithRandoms } from '@/types/types';
 
-const cocktailOptions = {
+const cocktailRequestOptions = {
   method: 'GET',
   url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/get-cocktail-names-glasses-ingredients`,
 };
@@ -19,7 +19,7 @@ export function useCocktailData() {
   return useQuery<CocktailDataWithRandoms>({
     queryKey: ['cocktailData'],
     queryFn: async () => {
-      const response = await axios.request(cocktailOptions);
+      const response = await axios.request(cocktailRequestOptions);
       const data = response.data;
 
       // Update the store with the cocktail data

@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useMemo, useEffect } from 'react';
 import { useCocktailData } from '@/hooks/useCocktailData';
 import { useSearchBarStore } from '@/store';
 import { Header } from '@/app/_components/Header';
@@ -11,16 +11,20 @@ import { getFilteredDrinks, getSortedDrinks } from './helpers';
 
 export default function DrinksPage() {
   const { data, isLoading, error } = useCocktailData();
-  const { activeSearch, sortOption } = useSearchBarStore();
+  const { activeSearch, sortOption, setTotalResults } = useSearchBarStore();
 
   const filteredAndSortedDrinks = useMemo(() => {
     if (!data?.cocktailData) return [];
 
-    const filteredDrinks = getFilteredDrinks(data.cocktailData, activeSearch);
-    const filteredAndSortedDrinks = getSortedDrinks(filteredDrinks, sortOption);
+    const filteredDrinks = getFilteredDrinks({ drinks: data.cocktailData, activeSearch });
+    const filteredAndSortedDrinks = getSortedDrinks({ drinks: filteredDrinks, sortOption });
 
     return filteredAndSortedDrinks;
   }, [data, activeSearch, sortOption]);
+
+  useEffect(() => {
+    setTotalResults(filteredAndSortedDrinks.length);
+  }, [filteredAndSortedDrinks.length, setTotalResults]);
 
   if (isLoading) {
     return (
@@ -57,10 +61,6 @@ export default function DrinksPage() {
           </div>
         ) : (
           <div className='space-y-4'>
-            <div className='text-sm text-gray-400'>
-              Found {filteredAndSortedDrinks.length}{' '}
-              {filteredAndSortedDrinks.length === 1 ? 'drink' : 'drinks'}
-            </div>
             <div className='grid gap-4'>
               {filteredAndSortedDrinks.map(drink => (
                 <DrinkRow key={drink.idDrink} drink={drink} />

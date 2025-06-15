@@ -2,14 +2,15 @@
 
 import { useMemo } from 'react';
 import { useSearchBarStore } from '@/store';
-import { filterResults } from '../helpers';
+import { getSearchBarOptions } from '../helpers';
 import { SearchBarMenuSection } from './SearchBarMenuSection';
 
 export function SearchBarMenu() {
-  const { searchQuery, selections, cocktailsData, setIsMenuOpen, searchType } = useSearchBarStore();
+  const { searchQuery, selections, cocktailsData, setIsSearchMenuOpen, searchType } =
+    useSearchBarStore();
 
   const filteredResults = useMemo(
-    () => filterResults(cocktailsData, searchQuery, selections, searchType),
+    () => getSearchBarOptions({ cocktailsData, searchQuery, searchType }),
     [searchQuery, cocktailsData, selections, searchType],
   );
 

@@ -6,11 +6,13 @@ import { NeonTitle } from './NeonTitle';
 import { SearchBar } from './SearchBar';
 import { SortBar } from './SortBar';
 import { useEffect, useState } from 'react';
+import { useSearchBarStore } from '@/store';
 
 export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const pathname = usePathname();
   const isResultsPage = pathname === '/drinks';
+  const { totalResults, activeSearch } = useSearchBarStore();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -44,7 +46,18 @@ export function Header() {
           </div>
           <div className='w-full lg:w-auto lg:flex-1 lg:max-w-2xl lg:ml-auto'>
             <SearchBar />
-            {isResultsPage && <SortBar />}
+            {isResultsPage && (
+              <div className='border-t border-white/10 flex items-center gap-4 mt-2 pt-4'>
+                <div className='flex items-center justify-between gap-4 w-full'>
+                  {activeSearch && totalResults > 0 && (
+                    <div className='text-sm text-gray-400 whitespace-nowrap'>
+                      Found {totalResults} {totalResults === 1 ? 'drink' : 'drinks'}
+                    </div>
+                  )}
+                  <SortBar />
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>

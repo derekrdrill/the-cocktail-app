@@ -1,132 +1,185 @@
-import { Cocktail, SearchType, Selection, SortOption } from '@/types/types';
+import { generalIngredients } from '@/constants/constants';
+import { getNormalizedString } from '@/utils';
+import { Cocktail } from '@/types/types';
+import {
+  GetDrinkIngredientsParams,
+  HasMatchingCategoryParams,
+  HasMatchingDrinkNameParams,
+  HasMatchingGlassTypeParams,
+  HasMatchingIngredientsParams,
+  HasMatchingDrinkGlassOrIngredientParams,
+  IsGeneralIngredientParams,
+  GetIngredientCountParams,
+  GetSortedDrinksByNameParams,
+  GetSortedDrinksByIngredientParams,
+  GetSortedDrinksByDifficultyParams,
+  GetFilteredDrinksParams,
+  GetSortedDrinksParams,
+} from './types';
 
-type SearchState = {
-  type: SearchType;
-  query: string;
-  selections: Selection[];
-} | null;
+function getDrinkIngredients({ drink }: GetDrinkIngredientsParams): string[] {
+  return Array.from({ length: 15 }, (_, i) => i + 1)
+    .map(i => drink[`strIngredient${i}`])
+    .filter((ingredient): ingredient is string => Boolean(ingredient))
+    .map(ingredient => ingredient.toLowerCase().trim());
+}
 
-export function getFilteredDrinks(drinks: Cocktail[], activeSearch: SearchState): Cocktail[] {
+function getFilteredDrinks({ drinks, activeSearch }: GetFilteredDrinksParams): Cocktail[] {
   if (!drinks || !activeSearch) return [];
 
   return drinks.filter(drink => {
     const { type: searchType, query: searchQuery, selections } = activeSearch;
 
-    // Get all ingredients for the drink
-    const drinkIngredients = Array.from({ length: 15 }, (_, i) => i + 1)
-      .map(i => drink[`strIngredient${i}`]?.toLowerCase().trim())
-      .filter(Boolean);
+    switch (searchType) {
+      case 'Cocktail name':
+        return searchQuery ? hasMatchingDrinkName({ drink, searchQuery }) : false;
 
-    // Case 1: Search by cocktail name
-    if (searchType === 'Cocktail name' && searchQuery) {
-      return drink.strDrink.toLowerCase().includes(searchQuery.toLowerCase());
-    }
-
-    // Case 2: Search by glass type
-    if (searchType === 'Glass types') {
-      const glassSelection = selections.find(s => s.type === 'glass');
-      if (!glassSelection) return false;
-      return drink.strGlass.toLowerCase() === glassSelection.value.toLowerCase();
-    }
-
-    // Case 3: Search by ingredients (including category filtering)
-    if (searchType === 'Ingredients') {
-      const ingredientSelections = selections.filter(s => s.type === 'ingredient');
-      if (ingredientSelections.length === 0) return false;
-
-      // For category filtering, we want to match if ANY of the category ingredients are present
-      // For regular ingredient search, we want to match if ALL selected ingredients are present
-      const isCategorySearch = ingredientSelections.length > 3; // If more than 3 ingredients, assume it's a category search
-
-      if (isCategorySearch) {
-        // For category search, match if ANY of the ingredients are present
-        return ingredientSelections.some(selection =>
-          drinkIngredients.some(ingredient => ingredient === selection.value.toLowerCase().trim()),
-        );
-      } else {
-        // For regular ingredient search, match if ALL selected ingredients are present
-        return ingredientSelections.every(selection =>
-          drinkIngredients.some(ingredient => ingredient === selection.value.toLowerCase().trim()),
-        );
+      case 'Glass types': {
+        const glassSelection = selections.find(s => s.type === 'glass');
+        return hasMatchingGlassType({ drink, glassSelection });
       }
-    }
 
-    // Case 4: Search by glass type and ingredients (All search type)
-    if (searchType === 'All') {
-      const glassSelection = selections.find(s => s.type === 'glass');
-      const ingredientSelections = selections.filter(s => s.type === 'ingredient');
-
-      const matchesGlass =
-        !glassSelection || drink.strGlass.toLowerCase() === glassSelection.value.toLowerCase();
-
-      // For category filtering in All search type
-      const isCategorySearch = ingredientSelections.length > 3;
-      const matchesIngredients = isCategorySearch
-        ? ingredientSelections.some(selection =>
-            drinkIngredients.some(
-              ingredient => ingredient === selection.value.toLowerCase().trim(),
-            ),
-          )
-        : ingredientSelections.length === 0 ||
-          ingredientSelections.every(selection =>
-            drinkIngredients.some(
-              ingredient => ingredient === selection.value.toLowerCase().trim(),
-            ),
-          );
-
-      const matchesSearch =
-        !searchQuery || drink.strDrink.toLowerCase().includes(searchQuery.toLowerCase());
-
-      return matchesGlass && matchesIngredients && matchesSearch;
-    }
-
-    return false;
-  });
-}
-
-export function getSortedDrinks(drinks: Cocktail[], sortOption: SortOption): Cocktail[] {
-  return [...drinks].sort((a, b) => {
-    switch (sortOption) {
-      case 'name-asc':
-        return a.strDrink.localeCompare(b.strDrink);
-      case 'name-desc':
-        return b.strDrink.localeCompare(a.strDrink);
-      case 'ingredients-asc': {
-        const aCount = Array.from({ length: 15 }, (_, i) => i + 1).filter(
-          i => a[`strIngredient${i}`],
-        ).length;
-        const bCount = Array.from({ length: 15 }, (_, i) => i + 1).filter(
-          i => b[`strIngredient${i}`],
-        ).length;
-        // If ingredient counts are equal, sort alphabetically
-        return aCount === bCount ? a.strDrink.localeCompare(b.strDrink) : aCount - bCount;
+      case 'Ingredients': {
+        const ingredientSelections = selections.filter(s => s.type === 'ingredient');
+        return hasMatchingIngredients({ drink, ingredientSelections });
       }
-      case 'ingredients-desc': {
-        const aCount = Array.from({ length: 15 }, (_, i) => i + 1).filter(
-          i => a[`strIngredient${i}`],
-        ).length;
-        const bCount = Array.from({ length: 15 }, (_, i) => i + 1).filter(
-          i => b[`strIngredient${i}`],
-        ).length;
-        // If ingredient counts are equal, sort alphabetically
-        return aCount === bCount ? a.strDrink.localeCompare(b.strDrink) : bCount - aCount;
+
+      case 'All': {
+        const glassSelection = selections.find(s => s.type === 'glass');
+        const ingredientSelections = selections.filter(s => s.type === 'ingredient');
+        return hasMatchingDrinkGlassOrIngredient({
+          drink,
+          searchQuery,
+          glassSelection,
+          ingredientSelections,
+        });
       }
-      case 'difficulty-asc': {
-        const difficultyOrder = { Beginner: 0, Intermediate: 1, Advanced: 2 };
-        // If difficulty levels are equal, sort alphabetically
-        return difficultyOrder[a.difficulty] === difficultyOrder[b.difficulty]
-          ? a.strDrink.localeCompare(b.strDrink)
-          : difficultyOrder[a.difficulty] - difficultyOrder[b.difficulty];
-      }
-      case 'difficulty-desc': {
-        const difficultyOrder = { Beginner: 0, Intermediate: 1, Advanced: 2 };
-        // If difficulty levels are equal, sort alphabetically
-        return difficultyOrder[a.difficulty] === difficultyOrder[b.difficulty]
-          ? a.strDrink.localeCompare(b.strDrink)
-          : difficultyOrder[b.difficulty] - difficultyOrder[a.difficulty];
-      }
+
       default:
-        return 0;
+        return false;
     }
   });
 }
+
+function getIngredientCount({ drink }: GetIngredientCountParams): number {
+  return Array.from({ length: 15 }, (_, i) => i + 1).filter(i => drink[`strIngredient${i}`]).length;
+}
+
+function getSortedDrinksByDifficulty({
+  drinks,
+  ascending,
+}: GetSortedDrinksByDifficultyParams): Cocktail[] {
+  const difficultyOrder = { Beginner: 0, Intermediate: 1, Advanced: 2 };
+
+  return [...drinks].sort((a, b) => {
+    const aDifficulty = difficultyOrder[a.difficulty];
+    const bDifficulty = difficultyOrder[b.difficulty];
+
+    if (aDifficulty === bDifficulty) {
+      return a.strDrink.localeCompare(b.strDrink);
+    }
+
+    return ascending ? aDifficulty - bDifficulty : bDifficulty - aDifficulty;
+  });
+}
+
+function getSortedDrinksByIngredient({
+  drinks,
+  ascending,
+}: GetSortedDrinksByIngredientParams): Cocktail[] {
+  return [...drinks].sort((a, b) => {
+    const aCount = getIngredientCount({ drink: a });
+    const bCount = getIngredientCount({ drink: b });
+
+    if (aCount === bCount) {
+      return a.strDrink.localeCompare(b.strDrink);
+    }
+
+    return ascending ? aCount - bCount : bCount - aCount;
+  });
+}
+
+function getSortedDrinksByName({ drinks, ascending }: GetSortedDrinksByNameParams): Cocktail[] {
+  return [...drinks].sort((a, b) => {
+    const comparison = a.strDrink.localeCompare(b.strDrink);
+    return ascending ? comparison : -comparison;
+  });
+}
+
+function getSortedDrinks({ drinks, sortOption }: GetSortedDrinksParams): Cocktail[] {
+  switch (sortOption) {
+    case 'name-asc':
+      return getSortedDrinksByName({ drinks, ascending: true });
+    case 'name-desc':
+      return getSortedDrinksByName({ drinks, ascending: false });
+    case 'ingredients-asc':
+      return getSortedDrinksByIngredient({ drinks, ascending: true });
+    case 'ingredients-desc':
+      return getSortedDrinksByIngredient({ drinks, ascending: false });
+    case 'difficulty-asc':
+      return getSortedDrinksByDifficulty({ drinks, ascending: true });
+    case 'difficulty-desc':
+      return getSortedDrinksByDifficulty({ drinks, ascending: false });
+    default:
+      return drinks;
+  }
+}
+
+function hasMatchingCategory({ ingredient, category }: HasMatchingCategoryParams): boolean {
+  if (!ingredient) return false;
+
+  const normalizedIngredient = getNormalizedString(ingredient);
+  const normalizedCategory = getNormalizedString(category);
+
+  if (isGeneralIngredient({ ingredient: normalizedCategory })) {
+    const ingredientWords = normalizedIngredient.split(/\s+/);
+    return ingredientWords.some(word => word === normalizedCategory);
+  }
+
+  return normalizedIngredient === normalizedCategory;
+}
+
+function hasMatchingDrinkName({ drink, searchQuery }: HasMatchingDrinkNameParams): boolean {
+  return getNormalizedString(drink.strDrink).includes(getNormalizedString(searchQuery));
+}
+
+function hasMatchingGlassType({ drink, glassSelection }: HasMatchingGlassTypeParams): boolean {
+  if (!glassSelection) return false;
+  return getNormalizedString(drink.strGlass) === getNormalizedString(glassSelection.value);
+}
+
+function hasMatchingIngredients({
+  drink,
+  ingredientSelections,
+}: HasMatchingIngredientsParams): boolean {
+  if (ingredientSelections.length === 0) return false;
+
+  const drinkIngredients = getDrinkIngredients({ drink });
+  return ingredientSelections.some(selection =>
+    drinkIngredients.some(ingredient =>
+      hasMatchingCategory({ ingredient, category: selection.value }),
+    ),
+  );
+}
+
+function hasMatchingDrinkGlassOrIngredient({
+  drink,
+  searchQuery = '',
+  glassSelection,
+  ingredientSelections,
+}: HasMatchingDrinkGlassOrIngredientParams): boolean {
+  const matchesGlass = !glassSelection || hasMatchingGlassType({ drink, glassSelection });
+  const matchesIngredients =
+    ingredientSelections.length === 0 || hasMatchingIngredients({ drink, ingredientSelections });
+  const matchesSearch = !searchQuery || hasMatchingDrinkName({ drink, searchQuery });
+
+  return matchesGlass && matchesIngredients && matchesSearch;
+}
+
+function isGeneralIngredient({ ingredient }: IsGeneralIngredientParams): boolean {
+  return generalIngredients.some(
+    category => ingredient.toLowerCase().trim() === category.toLowerCase(),
+  );
+}
+
+export { getFilteredDrinks, getSortedDrinks };

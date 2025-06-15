@@ -32,12 +32,7 @@ export function Tooltip({ children, title, content }: TooltipProps) {
 
   return (
     <div className='relative inline-block'>
-      <div
-        ref={triggerRef}
-        onMouseEnter={() => setIsVisible(true)}
-        onMouseLeave={() => setIsVisible(false)}
-        onClick={() => setIsVisible(!isVisible)}
-      >
+      <div ref={triggerRef} onClick={() => setIsVisible(!isVisible)} className='cursor-pointer'>
         {children}
       </div>
       {isVisible && (
@@ -50,7 +45,6 @@ export function Tooltip({ children, title, content }: TooltipProps) {
             transform: 'translateX(-50%)',
           }}
         >
-          {/* Arrow */}
           <div
             className='absolute w-2 h-2 bg-gray-900 rotate-45'
             style={{

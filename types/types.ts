@@ -17,12 +17,6 @@ type SortOption =
   | 'difficulty-asc'
   | 'difficulty-desc';
 
-type FilteredResults = {
-  cocktails: string[];
-  glasses: string[];
-  ingredients: string[];
-};
-
 type FilterData = {
   cocktailNames: string[];
   glassTypes: string[];
@@ -64,7 +58,6 @@ export type {
   CocktailData,
   CocktailDataWithRandoms,
   FilterData,
-  FilteredResults,
   SearchType,
   Selection,
   SortOption,

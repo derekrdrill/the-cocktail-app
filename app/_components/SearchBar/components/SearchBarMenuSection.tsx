@@ -16,7 +16,7 @@ export function SearchBarMenuSection({
   type,
   shouldShow,
 }: SearchBarMenuSectionProps) {
-  const { setIsMenuOpen, setSearchQuery, setSelections, selections, searchType } =
+  const { setIsSearchMenuOpen, setSearchQuery, setSelections, selections, searchType } =
     useSearchBarStore();
 
   if (!shouldShow || items.length === 0) return null;
@@ -24,7 +24,7 @@ export function SearchBarMenuSection({
   const handleSelection = (value: string) => {
     if (type === 'cocktail') {
       setSearchQuery(value);
-      setIsMenuOpen(false);
+      setIsSearchMenuOpen(false);
       return;
     }
 

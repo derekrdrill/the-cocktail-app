@@ -8,7 +8,7 @@ type SearchBarState = {
     glassTypes: string[];
     ingredients: string[];
   } | null;
-  isMenuOpen: boolean;
+  isSearchMenuOpen: boolean;
   isSearchTypeMenuOpen: boolean;
   searchType: SearchType;
   searchQuery: string;
@@ -19,8 +19,9 @@ type SearchBarState = {
     selections: Selection[];
   } | null;
   sortOption: SortOption;
+  totalResults: number;
   setCocktailsData: (data: SearchBarState['cocktailsData']) => void;
-  setIsMenuOpen: (isOpen: boolean) => void;
+  setIsSearchMenuOpen: (isOpen: boolean) => void;
   setIsSearchTypeMenuOpen: (isOpen: boolean) => void;
   setSearchType: (type: SearchType) => void;
   setSearchQuery: (query: string) => void;
@@ -28,24 +29,26 @@ type SearchBarState = {
   clearSearchState: () => void;
   setActiveSearch: () => void;
   setSortOption: (option: SortOption) => void;
+  setTotalResults: (count: number) => void;
 };
 
 export const useSearchBarStore = create<SearchBarState>()(
   persist(
-    (set, get) => ({
+    set => ({
       // Initial state
       cocktailsData: null,
-      isMenuOpen: false,
+      isSearchMenuOpen: false,
       isSearchTypeMenuOpen: false,
       searchType: 'All',
       searchQuery: '',
       selections: [],
       activeSearch: null,
       sortOption: 'name-asc',
+      totalResults: 0,
 
       // Actions
       setCocktailsData: data => set({ cocktailsData: data }),
-      setIsMenuOpen: isOpen => set({ isMenuOpen: isOpen }),
+      setIsSearchMenuOpen: isOpen => set({ isSearchMenuOpen: isOpen }),
       setIsSearchTypeMenuOpen: isOpen => set({ isSearchTypeMenuOpen: isOpen }),
       setSearchType: type => set({ searchType: type }),
       setSearchQuery: query => set({ searchQuery: query }),
@@ -67,6 +70,7 @@ export const useSearchBarStore = create<SearchBarState>()(
           },
         })),
       setSortOption: option => set({ sortOption: option }),
+      setTotalResults: count => set({ totalResults: count }),
     }),
     {
       name: 'search-state',
@@ -76,6 +80,7 @@ export const useSearchBarStore = create<SearchBarState>()(
         searchQuery: state.searchQuery,
         selections: state.selections,
         activeSearch: state.activeSearch,
+        totalResults: state.totalResults,
       }),
     },
   ),
