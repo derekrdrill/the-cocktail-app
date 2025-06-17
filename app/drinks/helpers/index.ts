@@ -168,12 +168,27 @@ function hasMatchingDrinkGlassOrIngredient({
   glassSelection,
   ingredientSelections,
 }: HasMatchingDrinkGlassOrIngredientParams): boolean {
-  const matchesGlass = !glassSelection || hasMatchingGlassType({ drink, glassSelection });
-  const matchesIngredients =
-    ingredientSelections.length === 0 || hasMatchingIngredients({ drink, ingredientSelections });
-  const matchesSearch = !searchQuery || hasMatchingDrinkName({ drink, searchQuery });
+  const matchesSearchQuery = !searchQuery || hasMatchingDrinkName({ drink, searchQuery });
 
-  return matchesGlass && matchesIngredients && matchesSearch;
+  const hasAnySelections = !!glassSelection || ingredientSelections.length > 0;
+
+  // If there are no selections, then the drink only needs to match the search query (if present)
+  if (!hasAnySelections) {
+    return matchesSearchQuery;
+  }
+
+  // If there are selections, at least one of them must match
+  let matchesAtLeastOneSelection = false;
+
+  if (glassSelection && hasMatchingGlassType({ drink, glassSelection })) {
+    matchesAtLeastOneSelection = true;
+  }
+
+  if (ingredientSelections.length > 0 && hasMatchingIngredients({ drink, ingredientSelections })) {
+    matchesAtLeastOneSelection = true;
+  }
+
+  return matchesSearchQuery && matchesAtLeastOneSelection;
 }
 
 function isGeneralIngredient({ ingredient }: IsGeneralIngredientParams): boolean {

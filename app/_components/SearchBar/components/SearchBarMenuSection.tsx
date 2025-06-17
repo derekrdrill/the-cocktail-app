@@ -42,14 +42,6 @@ export function SearchBarMenuSection({
       }
     }
 
-    if (type === 'ingredient') {
-      const ingredientCount = selections.filter(s => s.type === 'ingredient').length;
-      if (ingredientCount >= 3) {
-        console.log('Maximum of 3 ingredients can be selected');
-        return;
-      }
-    }
-
     // Only add if not already selected
     if (!selections.some(s => s.type === type && s.value === value)) {
       setSelections([...selections, newSelection]);

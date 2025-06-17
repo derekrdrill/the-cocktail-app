@@ -18,15 +18,24 @@ export function SearchBarChips() {
     );
   };
 
+  // If no selections, return null
+  if (selections.length === 0) {
+    return null;
+  }
+
   // If we have 3 or fewer selections, show them all
   if (selections.length <= 3) {
-    return selections.map(selection => (
-      <SearchBarChip
-        key={`${selection.type}-${selection.value}`}
-        label={selection.value}
-        selection={selection}
-      />
-    ));
+    return (
+      <>
+        {selections.map(selection => (
+          <SearchBarChip
+            key={`${selection.type}-${selection.value}`}
+            label={selection.value}
+            selection={selection}
+          />
+        ))}
+      </>
+    );
   }
 
   // If we have more than 3 selections, show the first 3 and a count chip
