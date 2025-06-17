@@ -14,6 +14,9 @@ export function SearchBarMenu() {
     [searchQuery, cocktailsData, selections, searchType],
   );
 
+  // Provide default value if filteredResults is null
+  const results = filteredResults || { cocktails: [], glasses: [], ingredients: [] };
+
   const shouldShowSection = (type: 'cocktail' | 'glass' | 'ingredient') => {
     if (searchType === 'All') return true;
     if (searchType === 'Cocktail name' && type === 'cocktail') return true;
@@ -23,9 +26,9 @@ export function SearchBarMenu() {
   };
 
   const hasResults =
-    (shouldShowSection('cocktail') && filteredResults.cocktails.length > 0) ||
-    (shouldShowSection('glass') && filteredResults.glasses.length > 0) ||
-    (shouldShowSection('ingredient') && filteredResults.ingredients.length > 0);
+    (shouldShowSection('cocktail') && results.cocktails.length > 0) ||
+    (shouldShowSection('glass') && results.glasses.length > 0) ||
+    (shouldShowSection('ingredient') && results.ingredients.length > 0);
 
   return (
     <div className='absolute bg-white border border-t-0 left-0 max-h-96 mt-1 overflow-auto rounded-b-lg shadow-lg top-full w-full z-50'>
@@ -36,25 +39,25 @@ export function SearchBarMenu() {
           {shouldShowSection('cocktail') && (
             <SearchBarMenuSection
               title='Cocktails'
-              items={filteredResults.cocktails}
+              items={results.cocktails}
               type='cocktail'
-              shouldShow={filteredResults.cocktails.length > 0}
+              shouldShow={results.cocktails.length > 0}
             />
           )}
           {shouldShowSection('glass') && (
             <SearchBarMenuSection
               title='Glass Types'
-              items={filteredResults.glasses}
+              items={results.glasses}
               type='glass'
-              shouldShow={filteredResults.glasses.length > 0}
+              shouldShow={results.glasses.length > 0}
             />
           )}
           {shouldShowSection('ingredient') && (
             <SearchBarMenuSection
               title='Ingredients'
-              items={filteredResults.ingredients}
+              items={results.ingredients}
               type='ingredient'
-              shouldShow={filteredResults.ingredients.length > 0}
+              shouldShow={results.ingredients.length > 0}
             />
           )}
         </>
