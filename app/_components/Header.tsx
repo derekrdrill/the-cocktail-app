@@ -44,8 +44,8 @@ export function Header() {
               />
             </Link>
           </div>
-          <div className='w-full lg:w-auto lg:flex-1 lg:max-w-2xl lg:ml-auto'>
-            <SearchBar />
+          <div className='w-full lg:w-auto lg:flex-1 lg:max-w-4xl lg:ml-auto'>
+            <SearchBar isHeader />
             {isResultsPage && (
               <div className='border-t border-white/10 flex items-center gap-4 mt-2 pt-4'>
                 <div className='flex items-center justify-between gap-4 w-full'>

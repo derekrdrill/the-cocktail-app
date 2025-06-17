@@ -10,7 +10,11 @@ import { SearchBarMenu } from './components/SearchBarMenu';
 import { SearchBarChips } from './components/SearchBarChips';
 import { SearchBarFilter } from './components/SearchBarFilter';
 
-export function SearchBar() {
+type SearchBarProps = {
+  isHeader?: boolean;
+};
+
+export function SearchBar({ isHeader }: SearchBarProps) {
   const router = useRouter();
   const searchBarRef = useRef<HTMLDivElement>(null);
   const {
@@ -42,26 +46,20 @@ export function SearchBar() {
   };
 
   const handleSearch = () => {
-    // Validate search criteria based on search type
-    if (searchType === 'Cocktail name' && !searchQuery) {
-      return; // Don't search if no query for cocktail name search
-    }
+    // if (searchType === 'Cocktail name' && !searchQuery) {
+    //   return;
+    // }
 
-    if (searchType === 'Glass types' && !selections.some(s => s.type === 'glass')) {
-      return; // Don't search if no glass type selected
-    }
+    // if (searchType === 'Glass types' && !selections.some(s => s.type === 'glass')) {
+    //   return;
+    // }
 
-    if (searchType === 'Ingredients' && !selections.some(s => s.type === 'ingredient')) {
-      return; // Don't search if no ingredients selected
-    }
+    // if (searchType === 'Ingredients' && !selections.some(s => s.type === 'ingredient')) {
+    //   return;
+    // }
 
-    // Set active search before navigating
     setActiveSearch();
-
-    // Navigate to results page
     router.push('/drinks');
-
-    // Close the menu after search
     setIsSearchMenuOpen(false);
   };
 
@@ -90,7 +88,11 @@ export function SearchBar() {
 
   return (
     <div className='container max-w-4xl mx-auto py-8 relative z-50' ref={searchBarRef}>
-      <div className='relative'>
+      <div
+        className={classNames('flex flex-col gap-2 relative ', {
+          'lg:flex-row': !isHeader,
+        })}
+      >
         <div className='bg-white border flex flex-wrap gap-2 h-12 items-center pr-4 rounded-lg shadow-md text-black w-full'>
           <SearchBarFilter />
           <SearchBarChips />
@@ -103,7 +105,7 @@ export function SearchBar() {
             placeholder={getPlaceholder()}
             value={searchQuery}
           />
-          {!!(searchQuery || selections.length) && (
+          {!!((searchQuery || selections.length) && searchType) && (
             <button
               onClick={() => {
                 clearSearchState();
@@ -113,15 +115,21 @@ export function SearchBar() {
               <X />
             </button>
           )}
-          <button
-            onClick={handleSearch}
-            className='bg-yellow-400 hover:bg-yellow-500 h-8 px-4 rounded-lg text-black font-medium transition-colors duration-200 flex items-center gap-2'
-          >
-            <Search className='h-4 w-4' />
-            Search
-          </button>
+
+          {isSearchMenuOpen && !isSearchTypeMenuOpen && <SearchBarMenu />}
         </div>
-        {isSearchMenuOpen && !isSearchTypeMenuOpen && <SearchBarMenu />}
+        <button
+          onClick={handleSearch}
+          className={classNames(
+            'bg-yellow-400 hover:bg-yellow-500  px-4 rounded-lg text-black font-medium transition-colors duration-200 flex justify-center items-center gap-2 text-center h-12',
+            {
+              'lg:h-auto lg:justify-start': !isHeader,
+            },
+          )}
+        >
+          <Search className='h-4 w-4' />
+          Search
+        </button>
       </div>
     </div>
   );
