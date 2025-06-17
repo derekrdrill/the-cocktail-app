@@ -6,13 +6,13 @@ import { NeonTitle } from './NeonTitle';
 import { SearchBar } from './SearchBar';
 import { SortBar } from './SortBar';
 import { useEffect, useState } from 'react';
-import { useSearchBarStore } from '@/store';
+import { useCocktailStore } from '@/store';
 
 export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const pathname = usePathname();
   const isResultsPage = pathname === '/drinks';
-  const { totalResults, activeSearch } = useSearchBarStore();
+  const { totalResults, activeSearch } = useCocktailStore();
 
   useEffect(() => {
     const handleScroll = () => {

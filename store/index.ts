@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { SearchType, Selection, SortOption } from '@/types/types';
 
-type SearchBarState = {
+type CocktailState = {
   cocktailsData: {
     cocktailNames: string[];
     glassTypes: string[];
@@ -20,19 +20,20 @@ type SearchBarState = {
   } | null;
   sortOption: SortOption;
   totalResults: number;
-  setCocktailsData: (data: SearchBarState['cocktailsData']) => void;
+  setCocktailsData: (data: CocktailState['cocktailsData']) => void;
   setIsSearchMenuOpen: (isOpen: boolean) => void;
   setIsSearchTypeMenuOpen: (isOpen: boolean) => void;
   setSearchType: (type: SearchType) => void;
   setSearchQuery: (query: string) => void;
   setSelections: (selections: Selection[]) => void;
   clearSearchState: () => void;
+  closeSearchMenu: () => void;
   setActiveSearch: () => void;
   setSortOption: (option: SortOption) => void;
   setTotalResults: (count: number) => void;
 };
 
-export const useSearchBarStore = create<SearchBarState>()(
+export const useCocktailStore = create<CocktailState>()(
   persist(
     set => ({
       // Initial state
@@ -55,12 +56,10 @@ export const useSearchBarStore = create<SearchBarState>()(
       setSelections: selections => set({ selections }),
       clearSearchState: () =>
         set({
-          searchType: 'All',
           searchQuery: '',
           selections: [],
-          activeSearch: null,
-          sortOption: 'name-asc',
         }),
+      closeSearchMenu: () => set({ isSearchMenuOpen: false }),
       setActiveSearch: () =>
         set(state => ({
           activeSearch: {

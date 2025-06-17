@@ -1,13 +1,13 @@
 'use client';
 
 import { useMemo } from 'react';
-import { useSearchBarStore } from '@/store';
+import { useCocktailStore } from '@/store';
 import { getSearchBarOptions } from '../helpers';
 import { SearchBarMenuSection } from './SearchBarMenuSection';
 
 export function SearchBarMenu() {
   const { searchQuery, selections, cocktailsData, setIsSearchMenuOpen, searchType } =
-    useSearchBarStore();
+    useCocktailStore();
 
   const filteredResults = useMemo(
     () => getSearchBarOptions({ cocktailsData, searchQuery, searchType }),

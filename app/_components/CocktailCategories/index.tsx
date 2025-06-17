@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useSearchBarStore } from '@/store';
+import { useCocktailStore } from '@/store';
 import { CocktailCategory } from '@/types/types';
 import { categoryIngredientMap } from '@/constants/constants';
 
@@ -52,7 +52,7 @@ const categories: CocktailCategory[] = [
 
 export function CocktailCategories() {
   const router = useRouter();
-  const { setSearchType, setSelections, setActiveSearch } = useSearchBarStore();
+  const { setSearchType, setSelections, setActiveSearch } = useCocktailStore();
 
   const handleCategoryClick = (e: React.MouseEvent, category: CocktailCategory) => {
     e.preventDefault(); // Prevent the default Link navigation

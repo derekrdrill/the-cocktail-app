@@ -4,7 +4,7 @@ import { useEffect, useRef } from 'react';
 import classNames from 'classnames';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 
-import { useSearchBarStore } from '@/store';
+import { useCocktailStore } from '@/store';
 import { SearchType } from '@/types/types';
 
 export function SearchBarFilter() {
@@ -16,7 +16,7 @@ export function SearchBarFilter() {
     setSearchType,
     setSearchQuery,
     setSelections,
-  } = useSearchBarStore();
+  } = useCocktailStore();
 
   const handleOptionClick = (newSearchType: SearchType) => {
     if (newSearchType !== searchType) {

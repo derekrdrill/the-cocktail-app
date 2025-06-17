@@ -1,4 +1,4 @@
-import { useSearchBarStore } from '@/store';
+import { useCocktailStore } from '@/store';
 import { SortOption } from '@/types/types';
 
 const sortOptions: { label: string; value: SortOption }[] = [
@@ -11,7 +11,7 @@ const sortOptions: { label: string; value: SortOption }[] = [
 ];
 
 export function SortBar() {
-  const { activeSearch, setSortOption, sortOption } = useSearchBarStore();
+  const { activeSearch, setSortOption, sortOption } = useCocktailStore();
 
   if (!activeSearch) return null;
 

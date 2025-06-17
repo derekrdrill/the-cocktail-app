@@ -2,7 +2,7 @@
 
 import { useMemo, useEffect } from 'react';
 import { useCocktailData } from '@/hooks/useCocktailData';
-import { useSearchBarStore } from '@/store';
+import { useCocktailStore } from '@/store';
 import { Header } from '@/app/_components/Header';
 import { DrinkRow } from './components/DrinkRow';
 import { LoadingState } from '@/app/_components/LoadingState';
@@ -11,7 +11,7 @@ import { getFilteredDrinks, getSortedDrinks } from './helpers';
 
 export default function DrinksPage() {
   const { data, isLoading, error } = useCocktailData();
-  const { activeSearch, sortOption, setTotalResults } = useSearchBarStore();
+  const { activeSearch, sortOption, setTotalResults } = useCocktailStore();
 
   const filteredAndSortedDrinks = useMemo(() => {
     if (!data?.cocktailData) return [];

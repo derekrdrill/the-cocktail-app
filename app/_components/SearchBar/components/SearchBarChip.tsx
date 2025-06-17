@@ -1,7 +1,7 @@
 'use client';
 
 import { X } from 'lucide-react';
-import { useSearchBarStore } from '@/store';
+import { useCocktailStore } from '@/store';
 import { Selection } from '@/types/types';
 
 type SearchBarChipProps = {
@@ -26,7 +26,7 @@ export const handleRemoveSelection = ({
 };
 
 export function SearchBarChip({ label, selection }: SearchBarChipProps) {
-  const { selections, setSelections } = useSearchBarStore();
+  const { selections, setSelections } = useCocktailStore();
 
   return (
     <div className='bg-gray-100 border border-gray-200 flex h-6 items-center px-2 rounded-full text-sm'>

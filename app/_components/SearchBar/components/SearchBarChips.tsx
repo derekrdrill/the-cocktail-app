@@ -1,5 +1,5 @@
 'use client';
-import { useSearchBarStore } from '@/store';
+import { useCocktailStore } from '@/store';
 import { Selection } from '@/types/types';
 
 import { Tooltip } from '@/app/_components/Tooltip';
@@ -8,7 +8,7 @@ import { SearchBarChip } from './SearchBarChip';
 import { X } from 'lucide-react';
 
 export function SearchBarChips() {
-  const { selections, setSelections } = useSearchBarStore();
+  const { selections, setSelections } = useCocktailStore();
 
   const handleRemoveSelection = (selectionToRemove: Selection) => {
     setSelections(

@@ -1,13 +1,14 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
 import classNames from 'classnames';
 import { useRef, useEffect } from 'react';
-import { useSearchBarStore } from '@/store';
+import { useRouter } from 'next/navigation';
+import { Search, X } from 'lucide-react';
+
+import { useCocktailStore } from '@/store';
 import { SearchBarMenu } from './components/SearchBarMenu';
 import { SearchBarChips } from './components/SearchBarChips';
 import { SearchBarFilter } from './components/SearchBarFilter';
-import { Search } from 'lucide-react';
 
 export function SearchBar() {
   const router = useRouter();
@@ -18,10 +19,12 @@ export function SearchBar() {
     searchQuery,
     selections,
     searchType,
+    clearSearchState,
+    closeSearchMenu,
     setIsSearchMenuOpen,
     setSearchQuery,
     setActiveSearch,
-  } = useSearchBarStore();
+  } = useCocktailStore();
 
   const getPlaceholder = () => {
     if (selections.length > 0) return '';
@@ -100,6 +103,16 @@ export function SearchBar() {
             placeholder={getPlaceholder()}
             value={searchQuery}
           />
+          {!!(searchQuery || selections.length) && (
+            <button
+              onClick={() => {
+                clearSearchState();
+                closeSearchMenu();
+              }}
+            >
+              <X />
+            </button>
+          )}
           <button
             onClick={handleSearch}
             className='bg-yellow-400 hover:bg-yellow-500 h-8 px-4 rounded-lg text-black font-medium transition-colors duration-200 flex items-center gap-2'

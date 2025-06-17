@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { useQuery } from '@tanstack/react-query';
-import { useSearchBarStore } from '@/store';
+import { useCocktailStore } from '@/store';
 import { Cocktail, CocktailDataWithRandoms } from '@/types/types';
 
 const cocktailRequestOptions = {
@@ -14,7 +14,7 @@ function getRandomCocktails(cocktails: Cocktail[], count: number): Cocktail[] {
 }
 
 export function useCocktailData() {
-  const { setCocktailsData } = useSearchBarStore();
+  const { setCocktailsData } = useCocktailStore();
 
   return useQuery<CocktailDataWithRandoms>({
     queryKey: ['cocktailData'],

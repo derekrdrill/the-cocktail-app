@@ -1,6 +1,6 @@
 'use client';
 
-import { useSearchBarStore } from '@/store';
+import { useCocktailStore } from '@/store';
 import { Selection } from '@/types/types';
 
 type SearchBarMenuSectionProps = {
@@ -17,7 +17,7 @@ export function SearchBarMenuSection({
   shouldShow,
 }: SearchBarMenuSectionProps) {
   const { setIsSearchMenuOpen, setSearchQuery, setSelections, selections, searchType } =
-    useSearchBarStore();
+    useCocktailStore();
 
   if (!shouldShow || items.length === 0) return null;
 
