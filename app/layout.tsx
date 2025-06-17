@@ -6,7 +6,7 @@ import { Providers } from './_components/Providers';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'The Cocktail App',
+  title: 'Cockatil Finder',
   description: 'Discover and explore cocktails',
 };
 

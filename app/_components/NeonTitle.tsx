@@ -12,7 +12,7 @@ export function NeonTitle({ size = 'lg', className = '' }: NeonTitleProps) {
 
   return (
     <h1 className={`font-bold neon-font neon-glow ${sizeClasses[size]} ${className}`}>
-      The Bartender App
+      Cockatil Finder
     </h1>
   );
 }
