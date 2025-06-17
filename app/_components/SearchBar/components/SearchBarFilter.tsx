@@ -12,11 +12,14 @@ export function SearchBarFilter() {
   const {
     isSearchTypeMenuOpen,
     searchType,
+    selections,
     setIsSearchTypeMenuOpen,
     setSearchType,
     setSearchQuery,
     setSelections,
   } = useCocktailStore();
+
+  const hasSelections = !!selections.length;
 
   const handleOptionClick = (newSearchType: SearchType) => {
     if (newSearchType !== searchType) {
@@ -45,10 +48,16 @@ export function SearchBarFilter() {
     <div className='relative' ref={searchBarFilterRef}>
       <button
         onClick={() => setIsSearchTypeMenuOpen(!isSearchTypeMenuOpen)}
-        className='bg-gray-100 border border-gray-200 flex flex-col h-11 px-2 rounded-l-lg text-gray-700 text-sm w-40'
+        className={classNames(
+          'bg-gray-100 border border-gray-200 flex flex-col h-12 px-3  text-gray-700 text-sm w-40 justify-center',
+          {
+            'rounded-l-lg': !hasSelections,
+            'rounded-tl-lg': hasSelections,
+          },
+        )}
       >
         <span className='flex text-xs'>Search by</span>
-        <div className='flex justify-between'>
+        <div className='flex justify-between items-center'>
           {searchType}
           {isSearchTypeMenuOpen ? (
             <ChevronUp className='h-4 w-4' />
@@ -58,7 +67,7 @@ export function SearchBarFilter() {
         </div>
       </button>
       {isSearchTypeMenuOpen && (
-        <div className='absolute bg-white border mt-1 p-1 rounded-lg shadow-lg w-full z-10'>
+        <div className='absolute bg-white border p-1 rounded-lg shadow-lg w-full z-10'>
           <button
             onClick={() => handleOptionClick('All')}
             className={classNames(

@@ -3,20 +3,29 @@
 import Link from 'next/link';
 import { Cocktail } from '@/types/types';
 import { DifficultyChip } from './DifficultyChip';
+import { useCocktailStore } from '@/store';
 
 type CocktailCardProps = {
   cocktail: Cocktail;
 };
 
 export function CocktailCard({ cocktail }: CocktailCardProps) {
+  const { setSelections, setSearchQuery, setSearchType } = useCocktailStore();
+
   const ingredientCount = Array.from({ length: 15 }, (_, i) => i + 1).filter(
     i => cocktail[`strIngredient${i}`],
   ).length;
 
   const drinkUrl = `/drink/${cocktail.strDrink.toLowerCase().replaceAll(' ', '-')}`;
 
+  const handleCocktailCardClick = () => {
+    setSearchQuery(cocktail.strDrink);
+    setSearchType('Cocktail name');
+    setSelections([]);
+  };
+
   return (
-    <Link href={drinkUrl} className='block h-full'>
+    <Link href={drinkUrl} className='block h-full' onClick={handleCocktailCardClick}>
       <div className='h-full flex flex-col bg-gradient-to-br from-gray-800 to-gray-900 border border-gray-700 hover:border-gray-600 hover:scale-105 hover:shadow-[0_0_15px_rgba(255,255,255,0.1)] rounded-lg p-4 transition-all duration-300 ease-in-out'>
         <div className='relative flex-shrink-0'>
           <img

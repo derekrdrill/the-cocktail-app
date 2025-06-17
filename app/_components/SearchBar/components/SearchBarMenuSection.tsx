@@ -26,7 +26,11 @@ export function SearchBarMenuSection({
       setSearchQuery(value);
       setIsSearchMenuOpen(false);
       return;
+    } else {
+      setSearchQuery('');
     }
+
+    setIsSearchMenuOpen(false);
 
     // For glass and ingredient selections (type is now guaranteed to be 'glass' or 'ingredient')
     setSearchQuery('');

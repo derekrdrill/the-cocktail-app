@@ -27,9 +27,14 @@ function getDrinkIngredients({ drink }: GetDrinkIngredientsParams): string[] {
 function getFilteredDrinks({ drinks, activeSearch }: GetFilteredDrinksParams): Cocktail[] {
   if (!drinks || !activeSearch) return [];
 
-  return drinks.filter(drink => {
-    const { type: searchType, query: searchQuery, selections } = activeSearch;
+  const { type: searchType, query: searchQuery, selections } = activeSearch;
 
+  // If there are no selections and no search query, return all drinks
+  if (!searchQuery && selections.length === 0) {
+    return drinks;
+  }
+
+  return drinks.filter(drink => {
     switch (searchType) {
       case 'Cocktail name':
         return searchQuery ? hasMatchingDrinkName({ drink, searchQuery }) : false;

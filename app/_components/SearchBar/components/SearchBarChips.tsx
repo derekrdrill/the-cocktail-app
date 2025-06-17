@@ -4,7 +4,6 @@ import { Selection } from '@/types/types';
 
 import { Tooltip } from '@/app/_components/Tooltip';
 import { SearchBarChip } from './SearchBarChip';
-
 import { X } from 'lucide-react';
 
 export function SearchBarChips() {
@@ -18,13 +17,31 @@ export function SearchBarChips() {
     );
   };
 
-  // If no selections, return null
+  const getVisibleCount = () => {
+    if (typeof window === 'undefined') return 3;
+
+    if (window.innerWidth < 640) {
+      return 1;
+    } else if (window.innerWidth < 1024) {
+      return 2;
+    } else {
+      return 3;
+    }
+  };
+
+  const visibleCount = getVisibleCount();
+
+  const visibleSelections = selections.slice(0, visibleCount);
+  const hiddenSelections = selections
+    .slice(visibleCount)
+    .sort((a, b) => a.value.localeCompare(b.value)); // Sort alphabetically
+  const remainingCount = hiddenSelections.length;
+
   if (selections.length === 0) {
     return null;
   }
 
-  // If we have 3 or fewer selections, show them all
-  if (selections.length <= 3) {
+  if (selections.length <= visibleCount) {
     return (
       <>
         {selections.map(selection => (
@@ -32,16 +49,12 @@ export function SearchBarChips() {
             key={`${selection.type}-${selection.value}`}
             label={selection.value}
             selection={selection}
+            handleRemoveSelection={handleRemoveSelection}
           />
         ))}
       </>
     );
   }
-
-  // If we have more than 3 selections, show the first 3 and a count chip
-  const visibleSelections = selections.slice(0, 3);
-  const hiddenSelections = selections.slice(3).sort((a, b) => a.value.localeCompare(b.value)); // Sort alphabetically
-  const remainingCount = hiddenSelections.length;
 
   return (
     <>
@@ -50,6 +63,7 @@ export function SearchBarChips() {
           key={`${selection.type}-${selection.value}`}
           label={selection.value}
           selection={selection}
+          handleRemoveSelection={handleRemoveSelection}
         />
       ))}
       <Tooltip

@@ -10,7 +10,6 @@ type DrinkRowProps = {
 };
 
 export function DrinkRow({ drink }: DrinkRowProps) {
-  // Get all ingredients and measures, properly typed
   const ingredients = Array.from({ length: 15 }, (_, i) => i + 1)
     .map(i => ({
       name: drink[`strIngredient${i}`],
@@ -18,19 +17,12 @@ export function DrinkRow({ drink }: DrinkRowProps) {
     }))
     .filter((ing): ing is { name: string; measure: string | null } => ing.name !== null);
 
-  // Format instructions by splitting into steps
-  const instructions = drink.strInstructions
-    ?.split('.')
-    .map(step => step.trim())
-    .filter(step => step.length > 0);
-
   return (
     <Link
       href={`/drink/${drink.strDrink.replaceAll(' ', '-')}`}
       className='block bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 rounded-xl transition-colors duration-200'
     >
       <div className='flex gap-6 p-6'>
-        {/* Image */}
         <div className='relative h-32 w-32 flex-shrink-0 overflow-hidden rounded-lg'>
           <Image
             src={drink.strDrinkThumb}
@@ -40,11 +32,8 @@ export function DrinkRow({ drink }: DrinkRowProps) {
             sizes='(max-width: 768px) 128px, 128px'
           />
         </div>
-
-        {/* Content */}
         <div className='flex-grow min-w-0'>
           <div className='space-y-4'>
-            {/* Header */}
             <div>
               <h2 className='text-xl font-semibold text-white mb-1'>{drink.strDrink}</h2>
               <div className='flex items-center gap-2 text-sm text-gray-300'>
@@ -58,8 +47,6 @@ export function DrinkRow({ drink }: DrinkRowProps) {
                 <DifficultyChip difficulty={drink.difficulty} />
               </div>
             </div>
-
-            {/* Ingredients */}
             <div>
               <h3 className='text-sm font-medium text-gray-300 mb-2'>Ingredients</h3>
               <div className='flex flex-wrap gap-2'>
